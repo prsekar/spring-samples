@@ -5,7 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>basics-di</module>
+        <module>basics</module>
+        <module>amqp</module>
+        <module>webapp</module>
     </modules>
 
     <groupId>org.spring.samples</groupId>
