@@ -10,6 +10,7 @@ import org.samples.messaging.utils.AMQPConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 /**
@@ -19,6 +20,7 @@ import java.io.IOException;
 public class MessageSubscriber {
     private static Logger logger = LoggerFactory.getLogger(MessageSubscriber.class);
 
+    private SimpleMessageListenerContainer container;
     @Autowired
     public MessageSubscriber(QueueManager queueManager,
                              MessageHandler messageHandler,
@@ -29,11 +31,16 @@ public class MessageSubscriber {
 
         CachingConnectionFactory cachingConnectionFactory = connectionFactory.getConnectionFactory();
 
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(cachingConnectionFactory);
+        container = new SimpleMessageListenerContainer(cachingConnectionFactory);
         String[] queueNames = new String[]{"consumerqueue"};
         container.setQueueNames(queueNames);
         container.setMessageListener(new MessageListenerAdapter(messageHandler));
         logger.info("Created a message listener for queues consumerqueue");
         container.start();
+        
+    }
+    @PreDestroy
+    public void destroy() {
+        container.stop();
     }
 }

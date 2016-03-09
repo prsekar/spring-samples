@@ -8,8 +8,10 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.KeyManagementException;
@@ -20,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
  */
 @Component
 @ComponentScan("org.samples.messaging")
+@Scope("singleton")
 public class AMQPConnectionFactory {
     private static final Logger logger = LoggerFactory.getLogger(AMQPConnectionFactory.class);
     private CachingConnectionFactory connectionFactory = null;
@@ -47,6 +50,12 @@ public class AMQPConnectionFactory {
     
     public CachingConnectionFactory getConnectionFactory() {
         return connectionFactory;
+    }
+
+    @PreDestroy
+    public void destroy() {
+        logger.info("destroying the connectionFactory");
+        connectionFactory.destroy();
     }
 
 }

@@ -1,6 +1,8 @@
 package org.samples.messaging.amqp;
 
 import org.samples.messaging.config.AppConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import java.util.Map;
  */
 @Configuration
 public class QueueManager {
+    private static final Logger logger = LoggerFactory.getLogger(QueueManager.class);
     private static final boolean DURABLE = true;
     private static final boolean NOT_EXCLUSIVE = false;
     private static final boolean AUTODELETE_OFF = false;
@@ -31,7 +34,7 @@ public class QueueManager {
 
 
     public void configure() {
-
+        logger.info("Configure the required exchanges, queues and bindings");
         Object rabbitAdmin = applicationContext.getBean("rabbitAdmin");
         Object rpcExchange = applicationContext.getBean("rpcExchange");
         Object rpcQueue = applicationContext.getBean("rpcQueue", rabbitAdmin);
